@@ -10,7 +10,7 @@
 <body>
     <main class="tournament-screen">
         <header class="tournament-header">
-            <h1>Chaves do Torneio</h1>
+            <h1>Tournament Brackets</h1>
         </header>
         <div id="bracket-container" class="bracket-wrapper">
             <h2>Loading tournament...</h2>
@@ -19,7 +19,7 @@
 
     <div id="score-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2>Placar da Partida</h2>
+            <h2>Match Score</h2>
             <div class="scoreboard-flex">
                 <div class="player-side">
                     <h3 id="modal-p1-name">P1</h3>
@@ -41,8 +41,8 @@
                     </div>
                 </div>
             </div>
-            <button id="confirm-score-btn" class="btn-confirm" disabled onclick="finalizeMatch()">Confirmar Vencedor</button>
-            <button class="btn-confirm" style="background:#666; margin-top:10px;" onclick="closeModal()">Cancelar</button>
+            <button id="confirm-score-btn" class="btn-confirm" disabled onclick="finalizeMatch()">Confirm Winner</button>
+            <button class="btn-confirm" style="background:#666; margin-top:10px;" onclick="closeModal()">Cancel</button>
         </div>
     </div>
 

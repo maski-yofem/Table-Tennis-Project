@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function buildBracket(players) {
     const container = document.getElementById('bracket-container');
-    container.innerHTML = ''; // Limpa o "Loading"
+    container.innerHTML = ''; // Clear the "Loading" screen.
 
     const numPlayers = players.length;
     const rounds = Math.log2(numPlayers);
@@ -156,7 +156,7 @@ function checkNextMatchForBye(matchEl) {
 }
 
 function displayChampion(winner) {
-    // Esconde o conteúdo do torneio
+    // Hide the tournament content.
     const header = document.querySelector('.tournament-header');
     const bracket = document.getElementById('bracket-container');
     if (header) header.style.display = 'none';
@@ -164,7 +164,7 @@ function displayChampion(winner) {
 
     const container = document.querySelector('.tournament-screen');
     
-    // Remove display anterior se existir para evitar duplicação
+    // Remove previous display if it exists to avoid duplication.
     const oldDisplay = document.getElementById('champion-display');
     if (oldDisplay) oldDisplay.remove();
 
@@ -181,16 +181,9 @@ function displayChampion(winner) {
     container.appendChild(championDiv);
 }
 
-// FUNÇÃO DE RESET CORRIGIDA
+// RESET FUNCTION
 function resetTournament() {
-    // 1. Limpa especificamente os dados do torneio
-    localStorage.removeItem('shuffledPlayers');
-    localStorage.removeItem('matchFormat');
-    
-    // 2. Opcional: Se quiser limpar TUDO (incluindo configurações persistentes)
-    // localStorage.clear(); 
+    localStorage.clear(); 
 
-    // 3. Redireciona para a página de registo de jogadores (ou index.html)
-    // Certifique-se de que o caminho está correto conforme a sua estrutura de pastas
     window.location.href = '../index.html'; 
 }

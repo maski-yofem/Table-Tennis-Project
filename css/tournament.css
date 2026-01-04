@@ -26,13 +26,13 @@ body {
     text-align: center;
 }
 
-/* CONTAINER DA CHAVE COM MARGEM À ESQUERDA */
+/* KEY CONTAINER WITH LEFT MARGIN */
 .bracket-wrapper {
     display: flex;
     justify-content: flex-start;
     align-items: stretch;
     gap: 50px;
-    padding: 20px 80px; /* Margem para não colar na borda esquerda */
+    padding: 20px 80px; /*Margin to avoid sticking to the left edge.*/
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -46,7 +46,7 @@ body {
     min-width: 200px; 
 }
 
-/* BLOCO DO JOGO */
+/* GAME BLOCK */
 .match {
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid #4fa0ff;
@@ -67,14 +67,14 @@ body {
 
 .player-top { border-bottom: 1px solid rgba(79, 160, 255, 0.3); }
 
-/* RESULTADOS EM DOURADO */
+/* RESULTS IN GOLD */
 .player .score {
     color: #FFD700;
     font-weight: bold;
     font-size: 1.1em;
 }
 
-/* ESTADOS DOS JOGADORES */
+/* PLAYER STATUS */
 .winner-highlight { 
     color: #00ff7f !important; 
     font-weight: bold; 
@@ -86,7 +86,7 @@ body {
     opacity: 0.7;
 }
 
-/* MODAL DE PLACAR */
+/* SCOREBOARD MODE */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -139,7 +139,7 @@ body {
 
 .btn-confirm:disabled { background: #444; color: #888; cursor: not-allowed; }
 
-/* TELA DO CAMPEÃO (ANIMAÇÃO SLIDE UP) */
+/* CHAMPION'S SCREEN (SLIDE-UP ANIMATION) */
 #champion-display {
     display: flex;
     flex-direction: column;

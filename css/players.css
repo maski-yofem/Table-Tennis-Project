@@ -1,0 +1,417 @@
+.players-submit {
+    background: linear-gradient(90deg,
+            #FFD700,
+            /* golden Yellow */
+            #FFA500,
+            /* medium Orange */
+            #001F54
+            /* Navy Blue */
+        );
+    border: none;
+    color: #000000;
+    font-weight: bold;
+    padding: 20px 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.players-submit:hover {
+    background: linear-gradient(to bottom,
+            #F2C70C 0%,
+            #F6DB6A 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Base and Main Layout */
+body {
+    background-color: #1D7048;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.players-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Use min-height to ensure the body doesn't become smaller than the screen, but still allow for scrolling if needed. */
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Header */
+.players-header {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 15px;  /* Space between the icon and the title. */
+    margin: 20px 0 10px 0; /* Adjust the margin. */
+}
+
+.players-icon {
+    width: 32px;
+    height: 32px;
+    fill: #FFD700;
+}
+
+.player-text {
+    color: #ffffff;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+/* Inputs Players */
+.player-inputs {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 450px; /* Limit the width to center the focus. */
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#new-player {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#new-player:focus {
+    border-color: #FFA500; /* Orange border when focused */
+}
+
+/* Add Player button */
+.player-inputs button {
+    background-color: #FFA500;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.2s;
+    flex-shrink: 0; /* Prevents the button from shrinking.*/
+}
+
+.player-inputs button:hover {
+    background-color: #FF8C00; /* Darker Orange on hover */
+    transform: translateY(-1px);
+}
+
+/* Players List */
+h3 {
+    color: #FFD700;
+    font-size: 1.2em;
+    margin-top: 10px;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.list-players-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 400px;
+    max-width: 450px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+
+#list-players-visual {
+    width: 100%;
+    max-width: 450px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+/* Style for list items */
+#list-players-visual li, .total-players {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #001F54;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+}
+
+/* Main Button - Start Tournament */
+.players-submit {
+    /* It retains the original gradient, but with a more refined padding/font.*/
+    background: linear-gradient(90deg,
+            #FFD700,
+            #FFA500,
+            #001F54
+        );
+    border: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 15px 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.players-submit:hover {
+    transform: translateY(-3px);
+    /* Lifting effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Additional style for the category selector */
+
+.match-config-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.match-config-container label {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.match-config-container select {
+    padding: 10px;
+    background: #001F54;
+    color: white;
+    border: 1px solid #FFD700;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*  ============================================
+    MEDIA QUERIES - RESPONSIVE
+    ============================================ 
+*/
+
+
+@media (max-width: 728px) {
+    .players-screen {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .players-header {
+        margin: 16px 0 8px 0;
+        gap: 12px;
+    }
+
+    .players-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .player-text {
+        font-size: 1.5em;
+    }
+
+    .player-inputs {
+        max-width: 100%;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    #new-player {
+        padding: 8px 12px;
+        font-size: 0.95em;
+    }
+
+    .player-inputs button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    h3 {
+        font-size: 1.1em;
+        margin-top: 8px;
+    }
+
+    .list-players-container {
+        height: 300px;
+        max-width: 100%;
+    }
+
+    #list-players-visual {
+        max-width: 100%;
+    }
+
+    #list-players-visual li, .total-players {
+        padding: 8px 12px;
+        margin-bottom: 6px;
+    }
+
+    .remove-player-btn {
+        padding: 4px 8px;
+        font-size: 0.85em;
+    }
+
+    .players-submit {
+        font-size: 1em;
+        padding: 12px 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .players-screen {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .players-header {
+        margin: 12px 0 6px 0;
+        gap: 10px;
+    }
+
+    .players-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .player-text {
+        font-size: 1.3em;
+    }
+
+    .player-inputs {
+        max-width: 100%;
+        padding: 10px;
+        gap: 6px;
+        flex-direction: column;
+    }
+
+    #new-player {
+        padding: 10px;
+        font-size: 0.9em;
+        width: 95%;
+    }
+
+    .player-inputs button {
+        padding: 10px;
+        font-size: 0.85em;
+        width: 100%;
+    }
+
+    h3 {
+        font-size: 1em;
+        margin-top: 6px;
+    }
+
+    .list-players-container {
+        height: 250px;
+        max-width: 100%;
+    }
+
+    #list-players-visual {
+        max-width: 100%;
+    }
+
+    #list-players-visual li, .total-players {
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        font-size: 0.9em;
+    }
+
+    .remove-player-btn {
+        padding: 3px 6px;
+        font-size: 0.8em;
+    }
+
+    .players-submit {
+        font-size: 0.95em;
+        padding: 10px 28px;
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 320px) {
+    .players-screen {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .players-header {
+        margin: 10px 0 4px 0;
+        gap: 8px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .players-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .player-text {
+        font-size: 1.1em;
+    }
+
+    .player-inputs {
+        max-width: 100%;
+        padding: 8px;
+        gap: 4px;
+        flex-direction: column;
+    }
+
+    #new-player {
+        padding: 8px;
+        font-size: 0.85em;
+        width: 95%;
+    }
+
+    .player-inputs button {
+        padding: 8px;
+        font-size: 0.8em;
+        width: 100%;
+    }
+
+    h3 {
+        font-size: 0.9em;
+        margin-top: 4px;
+    }
+
+    .list-players-container {
+        height: 200px;
+        max-width: 100%;
+    }
+
+    #list-players-visual {
+        max-width: 100%;
+    }
+
+    #list-players-visual li, .total-players {
+        padding: 6px 8px;
+        margin-bottom: 4px;
+        font-size: 0.85em;
+    }
+
+    .remove-player-btn {
+        padding: 2px 4px;
+        font-size: 0.75em;
+    }
+
+    .players-submit {
+        font-size: 0.85em;
+        padding: 8px 20px;
+        width: 100%;
+        max-width: 280px;
+    }
+}

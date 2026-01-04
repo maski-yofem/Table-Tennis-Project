@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Bracket</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/tournament.css"> 
+</head>
+<body>
+    <main class="tournament-screen">
+        <header class="tournament-header">
+            <h1>Table Tennis Tournament Bracket</h1>
+        </header>
+        <div id="bracket-container" class="bracket-wrapper">
+            <h2>Loading tournament...</h2>
+        </div>
+    </main>
+
+    <div id="score-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-match-title">Set Score</h2>
+            <p id="match-format-info"></p>
+            <div class="scoreboard-flex">
+                <div class="player-side">
+                    <h3 id="modal-p1-name">P1</h3>
+                    <div style="font-size: 0.8em;">Sets: <span id="sets-p1">0</span></div>
+                    <div class="point-controls">
+                        <button onclick="changePoint('p1', 1)">+</button>
+                        <span id="points-p1">0</span>
+                        <button onclick="changePoint('p1', -1)">-</button>
+                    </div>
+                </div>
+                <div style="font-weight: bold; font-size: 1.5em; margin-top: 40px;">VS</div>
+                <div class="player-side">
+                    <h3 id="modal-p2-name">P2</h3>
+                    <div style="font-size: 0.8em;">Sets: <span id="sets-p2">0</span></div>
+                    <div class="point-controls">
+                        <button onclick="changePoint('p2', 1)">+</button>
+                        <span id="points-p2">0</span>
+                        <button onclick="changePoint('p2', -1)">-</button>
+                    </div>
+                </div>
+            </div>
+            <button id="confirm-score-btn" class="btn-confirm" disabled onclick="finalizeMatch()">Confirm Match Winner</button><br>
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+    
+    <script src="../js/tournament.js"></script> 
+</body>
+</html>

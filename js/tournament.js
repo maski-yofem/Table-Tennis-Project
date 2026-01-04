@@ -37,28 +37,41 @@ function buildBracket(players) {
             const p2 = r === 1 ? players[m * 2 + 1] : '?';
 
             matchDiv.innerHTML = `
-                <div class="player player-top">${p1}</div>
-                <div class="player player-bottom">${p2}</div>
+                <div class="player player-top">
+                    <span class="name">${p1}</span>
+                    <span class="score"></span>
+                </div>
+                <div class="player player-bottom">
+                    <span class="name">${p2}</span>
+                    <span class="score"></span>
+                </div>
             `;
 
             matchDiv.onclick = () => {
                 if (matchDiv.classList.contains('finished')) return;
 
-                const n1 = matchDiv.querySelector('.player-top').innerText;
-                const n2 = matchDiv.querySelector('.player-bottom').innerText;
+                const n1 = matchDiv.querySelector('.player-top .name').innerText;
+                const n2 = matchDiv.querySelector('.player-bottom .name').innerText;
 
                 if (n1 === '?' || n2 === '?') return;
 
                 if (n1 === 'BYE' || n2 === 'BYE') {
-                    advanceWinner(matchDiv, n1 === 'BYE' ? n2 : n1, true);
+                    const winner = n1 === 'BYE' ? n2 : n1;
+                    advanceWinner(matchDiv, winner, true);
                 } else {
                     openScoreModal(matchDiv, n1, n2);
                 }
             };
 
             roundDiv.appendChild(matchDiv);
-        }
 
+            if (r === 1 && (p1 === 'BYE' || p2 === 'BYE')) {
+                setTimeout(() => {
+                    const winner = p1 === 'BYE' ? p2 : p1;
+                    advanceWinner(matchDiv, winner, true);
+                }, 0);
+            }
+        }
         container.appendChild(roundDiv);
     }
 }
@@ -118,7 +131,6 @@ function changePoint(player, value) {
             matchState.matchFinished = true;
         }
     }
-
     updateModalUI();
 }
 
@@ -137,8 +149,7 @@ function finalizeMatch() {
             ? matchState.p1Name
             : matchState.p2Name;
 
-    markMatchFinished(matchState.currentMatchElement, winner);
-    advanceWinner(matchState.currentMatchElement, winner);
+    advanceWinner(matchState.currentMatchElement, winner, false, matchState.p1Sets, matchState.p2Sets);
     closeModal();
 }
 
@@ -150,16 +161,19 @@ function closeModal() {
    VISUAL RESULT
 ========================= */
 
-function markMatchFinished(matchEl, winner) {
+function markMatchFinished(matchEl, winner, s1 = '', s2 = '') {
     const p1El = matchEl.querySelector('.player-top');
     const p2El = matchEl.querySelector('.player-bottom');
 
-    if (p1El.innerText === winner) {
+    p1El.querySelector('.score').innerText = s1;
+    p2El.querySelector('.score').innerText = s2;
+
+    if (p1El.querySelector('.name').innerText === winner) {
         p1El.classList.add('winner');
-        p2El.classList.add('loser');
+        p2El.classList.add('loser'); 
     } else {
         p2El.classList.add('winner');
-        p1El.classList.add('loser');
+        p1El.classList.add('loser'); 
     }
 
     matchEl.classList.add('finished');
@@ -169,10 +183,8 @@ function markMatchFinished(matchEl, winner) {
    BRACKET FLOW
 ========================= */
 
-function advanceWinner(matchEl, winner, isBye = false) {
-    if (!isBye) {
-        markMatchFinished(matchEl, winner);
-    }
+function advanceWinner(matchEl, winner, isBye = false, s1 = '', s2 = '') {
+    markMatchFinished(matchEl, winner, isBye ? '' : s1, isBye ? '' : s2);
 
     const [rPart, mPart] = matchEl.id.split('-');
     const round = parseInt(rPart.substring(1));
@@ -183,11 +195,21 @@ function advanceWinner(matchEl, winner, isBye = false) {
     );
 
     if (nextMatch) {
-        const slot =
-            match % 2 === 0 ? '.player-top' : '.player-bottom';
-        nextMatch.querySelector(slot).innerText = winner;
+        const slot = match % 2 === 0 ? '.player-top' : '.player-bottom';
+        nextMatch.querySelector(slot + ' .name').innerText = winner;
+        checkNextMatchForBye(nextMatch);
     } else {
         displayChampion(winner);
+    }
+}
+
+function checkNextMatchForBye(matchEl) {
+    const p1 = matchEl.querySelector('.player-top .name').innerText;
+    const p2 = matchEl.querySelector('.player-bottom .name').innerText;
+
+    if (p1 !== '?' && p2 !== '?' && (p1 === 'BYE' || p2 === 'BYE')) {
+        const winner = p1 === 'BYE' ? p2 : p1;
+        setTimeout(() => advanceWinner(matchEl, winner, true), 100);
     }
 }
 

@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* BASE */
-
 body {
     background-color: #001F54;
     color: #ffffff;
@@ -26,13 +25,12 @@ body {
 }
 
 /* BRACKET LAYOUT */
-
 .bracket-wrapper {
     display: flex;
     justify-content: center;
     align-items: stretch;
-    gap: 30px;
-    padding: 30px;
+    gap: 40px;
+    padding: 40px;
     overflow-x: auto;
 }
 
@@ -43,181 +41,200 @@ body {
     gap: var(--round-gap);
 }
 
-.round-1 { --round-gap: 80px; }
-.round-2 { --round-gap: 58px; }
-.round-3 { --round-gap: 250px; }
-.round-4 { --round-gap: 520px; }
+/* Dynamic spacing per round */
+.round-1 { --round-gap: 40px; }
+.round-2 { --round-gap: 120px; }
+.round-3 { --round-gap: 280px; }
+.round-4 { --round-gap: 600px; }
 
-.round:last-child {
-    justify-content: center;
-}
-
-/* MATCH */
-
+/* MATCH CARD */
 .match {
+    background-color: #003366;
+    border: 2px solid #4fa0ff;
+    border-radius: 8px;
+    width: 180px;
     position: relative;
-    width: 250px;
-    height: 90px;
-}
-
-.player {
-    display: flex;
-    align-items: center;
-    padding: 8px 15px;
-    background-color: #2b3a5b;
-    border-radius: 6px;
     cursor: pointer;
-    margin-bottom: 2px;
-    font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: background-color 0.2s, transform 0.1s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 1;
 }
 
-.player:hover {
-    background-color: #4a5c80;
-    transform: scale(1.02);
+.match:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(79, 160, 255, 0.4);
 }
 
-.player-name {
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.match.finished {
+    cursor: default;
+    border-color: #1D7048;
 }
 
-/* LINES */
-
-.match-line {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    width: 20px;
-    height: 1px;
-    background-color: #ffffff;
+/* PLAYER SLOTS */
+.player {
+    padding: 10px 15px;
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    min-height: 20px;
+    transition: all 0.3s;
 }
 
-.match-line::before,
-.match-line::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    width: 1px;
-    background-color: #ffffff;
+.player-top {
+    border-bottom: 1px solid #4fa0ff;
 }
 
-.match-line::before {
-    top: -45px;
-    height: 45px;
-}
-
-.match-line::after {
-    bottom: -45px;
-    height: 45px;
-}
-
-.round:last-child .match-line,
-.round:last-child .match-line::before,
-.round:last-child .match-line::after {
-    display: none;
-}
-
-/* STATES */
-
+/* Winner and Loser Stylization */
 .player.winner {
-    color: #2ecc71;
+    color: #00ff88;
     font-weight: bold;
 }
 
 .player.loser {
-    color: #e74c3c;
+    color: #ff4d4d;
+    opacity: 0.7;
+}
+
+/* Crossed out only the LOSER'S NAME */
+.player.loser .name {
     text-decoration: line-through;
-    opacity: 0.8;
 }
 
-.match.finished {
-    pointer-events: none;
-    opacity: 0.85;
+/* SCORE - Never scratched*/
+.score {
+    font-weight: bold;
+    color: #FFD700; /* Golden */
+    text-decoration: none !important;
+    margin-left: 8px;
+    min-width: 15px;
+    text-align: right;
 }
 
-
-/* BYE */
-
-.bye-match .player[data-player-name="BYE"] {
-    background-color: #333;
-    color: #999;
-    font-style: italic;
-    cursor: default;
-}
-
-.bye-label {
+/* CONECTIONS (LINES) */
+.match::after {
+    content: "";
     position: absolute;
+    right: -22px;
     top: 50%;
-    left: 8px;
-    transform: translateY(-50%);
-    background-color: #FFD700;
-    color: #000;
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-size: 0.65em;
+    width: 20px;
+    height: 2px;
+    background-color: #4fa0ff;
+}
+
+.round:last-child .match::after {
+    display: none;
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #002b5c;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid #FFD700;
+    width: 90%;
+    max-width: 450px;
+}
+
+.scoreboard-flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 25px 0;
+}
+
+.point-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.point-controls span {
+    font-size: 2.5em;
+    font-weight: bold;
+    min-width: 60px;
+}
+
+.point-controls button {
+    background: #4fa0ff;
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5em;
     font-weight: bold;
 }
 
-/* CHAMPION */
+.btn-confirm {
+    background: #1D7048;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+    width: 100%;
+}
 
+.btn-confirm:disabled {
+    background: #444;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* FINAL SCREEN OF CHAMPION */
 .champion-display-final {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px;
-    background-color: #1D7048;
-    border-radius: 15px;
-    border: 5px solid #FFD700;
-    margin-top: 80px;
+    text-align: center;
+    animation: fadeIn 1s ease;
 }
 
 .champion-display-final h1 {
     font-size: 3em;
     color: #FFD700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
 }
 
 .champion-display-final h2 {
     font-size: 2em;
-    margin-bottom: 30px;
+    margin: 20px 0;
 }
 
 .champion-display-final button {
-    background-color: #FFA500;
+    background: #FFD700;
+    color: #000;
     border: none;
-    padding: 14px 28px;
-    border-radius: 8px;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.2em;
     font-weight: bold;
-    cursor: pointer;
 }
 
-.champion-display-final button:hover {
-    background-color: #FF8C00;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-/* Estilos do Modal */
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.9); display: none; justify-content: center; align-items: center; z-index: 1000;
-}
-.modal-content {
-    background: #001F54; border: 2px solid #FFD700; padding: 30px; border-radius: 15px; text-align: center; color: white;
-}
-.scoreboard-flex { display: flex; align-items: center; gap: 30px; margin: 20px 0; justify-content: center; }
-.point-controls { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.point-controls span { font-size: 3em; color: #FFD700; font-weight: bold; }
-.point-controls button {
-    background: #1D7048; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5em; cursor: pointer;
-}
-.btn-confirm {
-    background: #FFD700; color: #001F54; border: none; padding: 12px 25px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 15px;
-}
-.btn-confirm:disabled { background: #555; cursor: not-allowed; }
-.btn-cancel { background: transparent; color: #ccc; border: 1px solid #444; padding: 5px 10px; border-radius: 5px; margin-top: 10px; cursor: pointer; }
-
 
 /* =====================================================
    RESPONSIVE BREAKPOINTS

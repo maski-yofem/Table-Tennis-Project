@@ -7,6 +7,7 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
 
 .tournament-screen {
@@ -15,122 +16,81 @@ body {
     align-items: center;
     padding: 20px;
     min-height: 100vh;
+    width: 100%;
 }
 
 .tournament-header h1 {
-    font-size: 2.5em;
+    font-size: 2em;
     color: #FFD700;
-    margin: 20px 0 30px;
+    margin-bottom: 30px;
     text-align: center;
 }
 
-/* BRACKET LAYOUT */
+/* CONTAINER DA CHAVE COM MARGEM À ESQUERDA */
 .bracket-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: stretch;
-    gap: 40px;
-    padding: 40px;
+    gap: 50px;
+    padding: 20px 80px; /* Margem para não colar na borda esquerda */
+    width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
 }
 
 .round {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    gap: var(--round-gap);
+    min-width: 200px; 
 }
 
-/* Dynamic spacing per round */
-.round-1 { --round-gap: 40px; }
-.round-2 { --round-gap: 120px; }
-.round-3 { --round-gap: 280px; }
-.round-4 { --round-gap: 600px; }
-
-/* MATCH CARD */
+/* BLOCO DO JOGO */
 .match {
-    background-color: #003366;
+    background: rgba(255, 255, 255, 0.05);
     border: 2px solid #4fa0ff;
-    border-radius: 8px;
-    width: 180px;
-    position: relative;
+    border-radius: 6px;
+    width: 100%;
+    margin: 10px 0;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    z-index: 1;
+    transition: all 0.3s ease;
 }
 
-.match:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(79, 160, 255, 0.4);
-}
-
-.match.finished {
-    cursor: default;
-    border-color: #1D7048;
-}
-
-/* PLAYER SLOTS */
 .player {
-    padding: 10px 15px;
-    font-size: 0.9em;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    min-height: 20px;
-    transition: all 0.3s;
+    padding: 10px 15px;
+    height: 40px;
 }
 
-.player-top {
-    border-bottom: 1px solid #4fa0ff;
-}
+.player-top { border-bottom: 1px solid rgba(79, 160, 255, 0.3); }
 
-/* Winner and Loser Stylization */
-.player.winner {
-    color: #00ff88;
+/* RESULTADOS EM DOURADO */
+.player .score {
+    color: #FFD700;
     font-weight: bold;
+    font-size: 1.1em;
 }
 
-.player.loser {
-    color: #ff4d4d;
+/* ESTADOS DOS JOGADORES */
+.winner-highlight { 
+    color: #00ff7f !important; 
+    font-weight: bold; 
+}
+
+.loser-highlight, .bye-highlight { 
+    color: #ff4d4d !important; 
+    text-decoration: line-through !important;
     opacity: 0.7;
 }
 
-/* Crossed out only the LOSER'S NAME */
-.player.loser .name {
-    text-decoration: line-through;
-}
-
-/* SCORE - Never scratched*/
-.score {
-    font-weight: bold;
-    color: #FFD700; /* Golden */
-    text-decoration: none !important;
-    margin-left: 8px;
-    min-width: 15px;
-    text-align: right;
-}
-
-/* CONECTIONS (LINES) */
-.match::after {
-    content: "";
-    position: absolute;
-    right: -22px;
-    top: 50%;
-    width: 20px;
-    height: 2px;
-    background-color: #4fa0ff;
-}
-
-.round:last-child .match::after {
-    display: none;
-}
-
-/* MODAL STYLES */
+/* MODAL DE PLACAR */
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
     display: none;
     justify-content: center;
     align-items: center;
@@ -138,373 +98,76 @@ body {
 }
 
 .modal-content {
-    background: #002b5c;
-    padding: 30px;
+    background: #001F54;
+    padding: 25px;
     border-radius: 15px;
-    text-align: center;
     border: 2px solid #FFD700;
     width: 90%;
     max-width: 450px;
+    text-align: center;
 }
 
 .scoreboard-flex {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 25px 0;
-}
-
-.point-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.point-controls span {
-    font-size: 2.5em;
-    font-weight: bold;
-    min-width: 60px;
+    margin: 20px 0;
 }
 
 .point-controls button {
     background: #4fa0ff;
     border: none;
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     font-size: 1.5em;
-    font-weight: bold;
 }
+
+.point-controls span { font-size: 2.5em; font-weight: bold; min-width: 55px; }
 
 .btn-confirm {
-    background: #1D7048;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 20px;
-    width: 100%;
-}
-
-.btn-confirm:disabled {
-    background: #444;
-    cursor: not-allowed;
-}
-
-.btn-cancel {
-    background: transparent;
-    color: #ff4d4d;
-    border: 1px solid #ff4d4d;
-    padding: 8px 15px;
-    border-radius: 5px;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-/* FINAL SCREEN OF CHAMPION */
-.champion-display-final {
-    text-align: center;
-    animation: fadeIn 1s ease;
-}
-
-.champion-display-final h1 {
-    font-size: 3em;
-    color: #FFD700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.champion-display-final h2 {
-    font-size: 2em;
-    margin: 20px 0;
-}
-
-.champion-display-final button {
     background: #FFD700;
     color: #000;
     border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    font-size: 1.2em;
+    padding: 15px;
+    border-radius: 8px;
     font-weight: bold;
+    width: 100%;
+    margin-top: 15px;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+.btn-confirm:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+/* TELA DO CAMPEÃO (ANIMAÇÃO SLIDE UP) */
+#champion-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+    background: #001F54;
+    z-index: 9999;
+    text-align: center;
+    animation: slideUpFade 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(100px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* =====================================================
-   RESPONSIVE BREAKPOINTS
-===================================================== */
+#champion-display h1 { color: #FFD700; font-size: 3em; margin: 0; }
+#champion-display h2 { color: #00ff7f; font-size: 4.5em; margin: 20px 0 40px; }
 
-
-/* -------- NOTEBOOK -------- */
-@media (max-width: 1024px) {
-    .match {
-        width: 190px;
-        height: 75px;
-    }
-
-    .round-1 { --round-gap: 100px; }
-    .round-2 { --round-gap: 85px; }
-    .round-3 { --round-gap: 190px; }
-    .round-4 { --round-gap: 390px; }
-
-    .match-line {
-        right: -16px;
-        width: 16px;
-    }
-
-}
-
-/* -------- TABLET -------- */
-@media (max-width: 768px) {
-
-    .bracket-wrapper {
-        gap: 20px;
-    }
-
-    .match {
-        width: 140px;
-        height: 90px;
-    }
-
-    .player {
-        padding: 6px 10px;
-        font-size: 0.85em;
-    }
-
-    .round-1 { --round-gap: 60px; }
-    .round-2 { --round-gap: 60px; }
-    .round-3 { --round-gap: 135px; }
-    .round-4 { --round-gap: 280px; }
-
-    .match-line {
-        right: -12px;
-        top: 30px;
-        width: 12px;
-    }
-
-    .match-line::before {
-        top: -30px;
-        height: 35px;
-    }
-
-    .match-line::after {
-        bottom: -35px;
-        height: 30px;
-    }
-
-    .tournament-header h1 {
-        font-size: 1.8em;
-    }
-
-    .bye-label {
-        font-size: 0.45em;
-    }
-
-    .champion-display-final h1 {
-        font-size: 2em;
-        color: #FFD700;
-    }
-
-}
-
-/* -------- SMALL MOBILE -------- */
-@media (max-width: 590px) {
-
-    .bracket-wrapper {
-        gap: 20px;
-    }
-
-    .match {
-        width: 110px;
-        height: 50px;
-    }
-
-    .player {
-        padding: 5px 8px;
-        font-size: 0.75em;
-    }
-
-    .round-1 { --round-gap: 80px; }
-    .round-2 { --round-gap: 70px; }
-    .round-3 { --round-gap: 100px; }
-    .round-4 { --round-gap: 210px; }
-
-    .match-line {
-        right: -8px;
-        top: 30px;
-        width: 8px;
-    }
-
-    
-    .match-line::before {
-        top: -25px;
-        height: 25px;
-    }
-
-    .match-line::after {
-        bottom: -25px;
-        height: 25px;
-    }
-
-    .tournament-header h1 {
-        font-size: 1.4em;
-    }
-
-    .bye-label {
-        font-size: 0.35em;
-    }
-
-}
-
-/* -------- EXTRA SMALL -------- */
-@media (max-width: 490px) {
-    .match {
-        width: 95px;
-        height: 46px;
-    }
-
-    .player {
-        padding: 4px 6px;
-        font-size: 0.7em;
-    }
-
-    .round-1 { --round-gap: 70px; }
-    .round-2 { --round-gap: 70px; }
-    .round-3 { --round-gap: 85px; }
-    .round-4 { --round-gap: 175px; }
-
-    .match-line {
-        right: -10px;
-        top: 25px;
-        width: 6px;
-    }
-
-    .match-line::before {
-        top: -20px;
-        height: 20px;
-    }
-
-    .match-line::after {
-        bottom: -20px;
-        height: 20px;
-    }
-
-    .bye-label {
-        font-size: 0.25em;
-    }
-
-    .champion-display-final h1 {
-        font-size: 1.8em;
-        color: #FFD700;
-    }
-
-}
-
-/* -------- ULTRA SMALL -------- */
-@media (max-width: 435px) {
-    .match {
-        width: 80px;
-        height: 40px;
-    }
-
-    .player {
-        padding: 3px 5px;
-        font-size: 0.65em;
-    }
-
-    .round-1 { --round-gap: 90px; }
-    .round-2 { --round-gap: 70px; }
-    .round-3 { --round-gap: 70px; }
-    .round-4 { --round-gap: 145px; }
-
-    .match-line {
-        right: -8px;
-        width: 5px;
-    }
-
-    .match-line::before {
-        top: -20px;
-        height: px;
-    }
-
-    .match-line::after {
-        bottom: -20px;
-        height: 20px;
-    }
-
-    .tournament-header h1 {
-        font-size: 1em;
-    }
-
-    .bye-label {
-        font-size: 0.20em;
-    }
-
-    .champion-display-final h1 {
-        font-size: 1.2em;
-        color: #FFD700;
-    }
-
-    .champion-display-final button {
-        padding: 12px 20px;
-    }
-}
-
-@media (max-width: 380px) {
-    .match {
-        width: 70px;
-        height: 40px;
-    }
-
-    .player {
-        padding: 3px 5px;
-        font-size: 0.65em;
-    }
-
-    .round-1 { --round-gap: 90px; }
-    .round-2 { --round-gap: 70px; }
-    .round-3 { --round-gap: 70px; }
-    .round-4 { --round-gap: 145px; }
-
-    .match-line {
-        right: -9px;
-        top: 20px;
-        width: 10px;
-    }
-
-    .match-line::before {
-        top: -20px;
-        height: px;
-    }
-
-    .match-line::after {
-        bottom: -20px;
-        height: 20px;
-    }
-
-    .tournament-header h1 {
-        font-size: 1em;
-    }
-    
-    .bye-label {
-        padding: 1.5px 0;
-        font-size: 0.17em;
-    }
-
-    .champion-display-final h1 {
-        font-size: .8em;
-        color: #FFD700;
-    }
-
-    .champion-display-final button {
-        padding: 12px 12px;
-        font-size: 8px;
-    }
-
+.btn-restart {
+    background: #FFD700;
+    color: #000;
+    border: none;
+    padding: 20px 50px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+    cursor: pointer;
 }

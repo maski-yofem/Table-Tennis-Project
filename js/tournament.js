@@ -1,23 +1,21 @@
 let matchState = {
-    p1Points: 0,
-    p2Points: 0,
-    p1Sets: 0,
-    p2Sets: 0,
-    neededSets: 0,
-    currentMatchElement: null,
-    p1Name: '',
-    p2Name: '',
-    matchFinished: false
+    p1Points: 0, p2Points: 0, p1Sets: 0, p2Sets: 0,
+    neededSets: 0, currentMatchElement: null,
+    p1Name: '', p2Name: '', matchFinished: false
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     const players = JSON.parse(localStorage.getItem('shuffledPlayers'));
-    if (players) buildBracket(players);
+    if (players && players.length > 0) {
+        buildBracket(players);
+    } else {
+        document.getElementById('bracket-container').innerHTML = "<h2>Erro: Jogadores não encontrados.</h2>";
+    }
 });
 
 function buildBracket(players) {
     const container = document.getElementById('bracket-container');
-    container.innerHTML = '';
+    container.innerHTML = ''; // Limpa o "Loading"
 
     const numPlayers = players.length;
     const rounds = Math.log2(numPlayers);
@@ -25,10 +23,9 @@ function buildBracket(players) {
     for (let r = 1; r <= rounds; r++) {
         const roundDiv = document.createElement('div');
         roundDiv.className = `round round-${r}`;
+        const matchesInRound = numPlayers / Math.pow(2, r);
 
-        const matches = numPlayers / Math.pow(2, r);
-
-        for (let m = 0; m < matches; m++) {
+        for (let m = 0; m < matchesInRound; m++) {
             const matchDiv = document.createElement('div');
             matchDiv.className = 'match';
             matchDiv.id = `r${r}-m${m}`;
@@ -37,118 +34,76 @@ function buildBracket(players) {
             const p2 = r === 1 ? players[m * 2 + 1] : '?';
 
             matchDiv.innerHTML = `
-                <div class="player player-top">
+                <div class="player player-top" onclick="openModal('${matchDiv.id}')">
                     <span class="name">${p1}</span>
-                    <span class="score"></span>
+                    <span class="score">-</span>
                 </div>
-                <div class="player player-bottom">
+                <div class="player player-bottom" onclick="openModal('${matchDiv.id}')">
                     <span class="name">${p2}</span>
-                    <span class="score"></span>
+                    <span class="score">-</span>
                 </div>
             `;
-
-            matchDiv.onclick = () => {
-                if (matchDiv.classList.contains('finished')) return;
-
-                const n1 = matchDiv.querySelector('.player-top .name').innerText;
-                const n2 = matchDiv.querySelector('.player-bottom .name').innerText;
-
-                if (n1 === '?' || n2 === '?') return;
-
-                if (n1 === 'BYE' || n2 === 'BYE') {
-                    const winner = n1 === 'BYE' ? n2 : n1;
-                    advanceWinner(matchDiv, winner, true);
-                } else {
-                    openScoreModal(matchDiv, n1, n2);
-                }
-            };
-
             roundDiv.appendChild(matchDiv);
-
-            if (r === 1 && (p1 === 'BYE' || p2 === 'BYE')) {
-                setTimeout(() => {
-                    const winner = p1 === 'BYE' ? p2 : p1;
-                    advanceWinner(matchDiv, winner, true);
-                }, 0);
-            }
+            if (r === 1) checkNextMatchForBye(matchDiv);
         }
         container.appendChild(roundDiv);
     }
 }
 
-/* =========================
-   MODAL / SCORE
-========================= */
+function openModal(matchId) {
+    const matchEl = document.getElementById(matchId);
+    const p1 = matchEl.querySelector('.player-top .name').innerText;
+    const p2 = matchEl.querySelector('.player-bottom .name').innerText;
 
-function openScoreModal(matchEl, p1, p2) {
-    const format = parseInt(localStorage.getItem('matchFormat')) || 5;
+    if (p1 === '?' || p2 === '?' || p1 === 'BYE' || p2 === 'BYE' || matchEl.classList.contains('finished')) return;
 
-    matchState = {
-        p1Points: 0,
-        p2Points: 0,
-        p1Sets: 0,
-        p2Sets: 0,
-        neededSets: Math.ceil(format / 2),
-        currentMatchElement: matchEl,
-        p1Name: p1,
-        p2Name: p2,
-        matchFinished: false
-    };
+    matchState.currentMatchElement = matchEl;
+    matchState.p1Name = p1;
+    matchState.p2Name = p2;
+    matchState.p1Points = 0; matchState.p2Points = 0;
+    matchState.p1Sets = 0; matchState.p2Sets = 0;
+    matchState.matchFinished = false;
+
+    const format = localStorage.getItem('matchFormat') || '3';
+    matchState.neededSets = Math.ceil(parseInt(format) / 2);
 
     document.getElementById('modal-p1-name').innerText = p1;
     document.getElementById('modal-p2-name').innerText = p2;
-
-    updateModalUI();
+    updateModalDisplay();
     document.getElementById('score-modal').style.display = 'flex';
 }
 
-function changePoint(player, value) {
-    if (matchState.matchFinished) return;
-
-    if (player === 'p1') {
-        matchState.p1Points = Math.max(0, matchState.p1Points + value);
-    } else {
-        matchState.p2Points = Math.max(0, matchState.p2Points + value);
-    }
-
-    if (
-        (matchState.p1Points >= 11 || matchState.p2Points >= 11) &&
-        Math.abs(matchState.p1Points - matchState.p2Points) >= 2
-    ) {
-        if (matchState.p1Points > matchState.p2Points) {
-            matchState.p1Sets++;
-        } else {
-            matchState.p2Sets++;
-        }
-
-        matchState.p1Points = 0;
-        matchState.p2Points = 0;
-
-        if (
-            matchState.p1Sets === matchState.neededSets ||
-            matchState.p2Sets === matchState.neededSets
-        ) {
-            matchState.matchFinished = true;
-        }
-    }
-    updateModalUI();
-}
-
-function updateModalUI() {
+function updateModalDisplay() {
     document.getElementById('points-p1').innerText = matchState.p1Points;
     document.getElementById('points-p2').innerText = matchState.p2Points;
     document.getElementById('sets-p1').innerText = matchState.p1Sets;
     document.getElementById('sets-p2').innerText = matchState.p2Sets;
-
     document.getElementById('confirm-score-btn').disabled = !matchState.matchFinished;
 }
 
-function finalizeMatch() {
-    const winner =
-        matchState.p1Sets > matchState.p2Sets
-            ? matchState.p1Name
-            : matchState.p2Name;
+function changePoint(player, amount) {
+    if (matchState.matchFinished && amount > 0) return;
+    if (player === 'p1') matchState.p1Points = Math.max(0, matchState.p1Points + amount);
+    else matchState.p2Points = Math.max(0, matchState.p2Points + amount);
+    checkSetWinner();
+    updateModalDisplay();
+}
 
+function checkSetWinner() {
+    const p1 = matchState.p1Points;
+    const p2 = matchState.p2Points;
+    if ((p1 >= 11 || p2 >= 11) && Math.abs(p1 - p2) >= 2) {
+        if (p1 > p2) matchState.p1Sets++;
+        else matchState.p2Sets++;
+        matchState.p1Points = 0; matchState.p2Points = 0;
+        if (matchState.p1Sets === matchState.neededSets || matchState.p2Sets === matchState.neededSets) {
+            matchState.matchFinished = true;
+        }
+    }
+}
+
+function finalizeMatch() {
+    const winner = matchState.p1Sets > matchState.p2Sets ? matchState.p1Name : matchState.p2Name;
     advanceWinner(matchState.currentMatchElement, winner, false, matchState.p1Sets, matchState.p2Sets);
     closeModal();
 }
@@ -157,42 +112,30 @@ function closeModal() {
     document.getElementById('score-modal').style.display = 'none';
 }
 
-/* =========================
-   VISUAL RESULT
-========================= */
-
-function markMatchFinished(matchEl, winner, s1 = '', s2 = '') {
-    const p1El = matchEl.querySelector('.player-top');
-    const p2El = matchEl.querySelector('.player-bottom');
-
-    p1El.querySelector('.score').innerText = s1;
-    p2El.querySelector('.score').innerText = s2;
-
-    if (p1El.querySelector('.name').innerText === winner) {
-        p1El.classList.add('winner');
-        p2El.classList.add('loser'); 
-    } else {
-        p2El.classList.add('winner');
-        p1El.classList.add('loser'); 
-    }
-
+function markMatchFinished(matchEl, winner, s1, s2) {
     matchEl.classList.add('finished');
-}
+    const p1Score = matchEl.querySelector('.player-top .score');
+    const p2Score = matchEl.querySelector('.player-bottom .score');
+    if (p1Score) p1Score.innerText = s1;
+    if (p2Score) p2Score.innerText = s2;
 
-/* =========================
-   BRACKET FLOW
-========================= */
+    matchEl.querySelectorAll('.player').forEach(row => {
+        const nameSpan = row.querySelector('.name');
+        const currentName = nameSpan.innerText.trim();
+        if (currentName === winner) {
+            nameSpan.classList.add('winner-highlight');
+        } else if (currentName !== '?' && currentName !== '') {
+            nameSpan.classList.add('loser-highlight');
+        }
+    });
+}
 
 function advanceWinner(matchEl, winner, isBye = false, s1 = '', s2 = '') {
     markMatchFinished(matchEl, winner, isBye ? '' : s1, isBye ? '' : s2);
-
     const [rPart, mPart] = matchEl.id.split('-');
     const round = parseInt(rPart.substring(1));
     const match = parseInt(mPart.substring(1));
-
-    const nextMatch = document.getElementById(
-        `r${round + 1}-m${Math.floor(match / 2)}`
-    );
+    const nextMatch = document.getElementById(`r${round + 1}-m${Math.floor(match / 2)}`);
 
     if (nextMatch) {
         const slot = match % 2 === 0 ? '.player-top' : '.player-bottom';
@@ -206,21 +149,48 @@ function advanceWinner(matchEl, winner, isBye = false, s1 = '', s2 = '') {
 function checkNextMatchForBye(matchEl) {
     const p1 = matchEl.querySelector('.player-top .name').innerText;
     const p2 = matchEl.querySelector('.player-bottom .name').innerText;
-
     if (p1 !== '?' && p2 !== '?' && (p1 === 'BYE' || p2 === 'BYE')) {
         const winner = p1 === 'BYE' ? p2 : p1;
         setTimeout(() => advanceWinner(matchEl, winner, true), 100);
     }
 }
 
-function displayChampion(name) {
-    document.getElementById('bracket-container').innerHTML = `
-        <div class="champion-display-final">
-            <h1>🏆 CAMPEÃO 🏆</h1>
-            <h2>${name}</h2>
-            <button onclick="window.location.href='../index.html'">
-                Novo Torneio
-            </button>
-        </div>
+function displayChampion(winner) {
+    // Esconde o conteúdo do torneio
+    const header = document.querySelector('.tournament-header');
+    const bracket = document.getElementById('bracket-container');
+    if (header) header.style.display = 'none';
+    if (bracket) bracket.style.display = 'none';
+
+    const container = document.querySelector('.tournament-screen');
+    
+    // Remove display anterior se existir para evitar duplicação
+    const oldDisplay = document.getElementById('champion-display');
+    if (oldDisplay) oldDisplay.remove();
+
+    const championDiv = document.createElement('div');
+    championDiv.id = 'champion-display';
+    
+    championDiv.innerHTML = `
+        <div style="font-size: 7em; margin-bottom: 20px;">🏆</div>
+        <h1>GRANDE CAMPEÃO</h1>
+        <h2>${winner}</h2>
+        <button class="btn-restart" onclick="resetTournament()">NOVO TORNEIO</button>
     `;
+    
+    container.appendChild(championDiv);
+}
+
+// FUNÇÃO DE RESET CORRIGIDA
+function resetTournament() {
+    // 1. Limpa especificamente os dados do torneio
+    localStorage.removeItem('shuffledPlayers');
+    localStorage.removeItem('matchFormat');
+    
+    // 2. Opcional: Se quiser limpar TUDO (incluindo configurações persistentes)
+    // localStorage.clear(); 
+
+    // 3. Redireciona para a página de registo de jogadores (ou index.html)
+    // Certifique-se de que o caminho está correto conforme a sua estrutura de pastas
+    window.location.href = '../index.html'; 
 }
